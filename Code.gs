@@ -217,7 +217,7 @@ function transferirUltimosArquivos(pastaOrigem, pastaDestino, quantidade) {
   }
 
   arquivos.forEach(arquivo => {
-    moverArquivo(arquivo, pastaDestino);
+    moverArquivo(arquivo, pastaOrigem, pastaDestino);
   });
 
   return arquivos.length;
@@ -236,7 +236,7 @@ function transferirArquivoEspecifico(pastaOrigem, pastaDestino, nomeExato) {
   let transferidos = 0;
   while (arquivos.hasNext()) {
     const arquivo = arquivos.next();
-    moverArquivo(arquivo, pastaDestino);
+    moverArquivo(arquivo, pastaOrigem, pastaDestino);
     transferidos++;
   }
 
@@ -255,7 +255,7 @@ function transferirArquivoPorPadrao(pastaOrigem, pastaDestino, prefixo, sufixo) 
     const nome = arquivo.getName();
 
     if (nome.startsWith(prefixo) && nome.endsWith(sufixo)) {
-      moverArquivo(arquivo, pastaDestino);
+      moverArquivo(arquivo, pastaOrigem, pastaDestino);
       transferidos++;
     }
   }
@@ -270,9 +270,9 @@ function transferirArquivoPorPadrao(pastaOrigem, pastaDestino, prefixo, sufixo) 
 /**
  * Move um arquivo para a pasta de destino
  */
-function moverArquivo(arquivo, pastaDestino) {
+function moverArquivo(arquivo, pastaOrigem, pastaDestino) {
   pastaDestino.addFile(arquivo);
-  DriveApp.getRootFolder().removeFile(arquivo);
+  pastaOrigem.removeFile(arquivo);
 }
 
 /**
@@ -298,17 +298,11 @@ function obterArquivosOrdenados(pasta, quantidade) {
  * Cria um trigger de tempo para executar a transferência
  */
 function criarTrigger(agendamentoId, horario, diasSemana) {
-  // Nota: Aqui seria necessário implementar uma solução de agendamento
-  // Por enquanto, vamos usar triggers de Apps Script
-  // Em um ambiente real, você poderia usar Cloud Scheduler ou Apps Script Triggers
+  // O sistema usa sincronizarTriggers() que verifica todos os agendamentos
+  // a cada 5 minutos e executa se necessário
+  // Não precisa criar triggers individuais
 
-  const nomeFunction = 'executarTransferencia_' + agendamentoId;
-
-  // Remover triggers antigos
   limparTriggers(agendamentoId);
-
-  // Para hora específica, criar wrapper function
-  eval('function ' + nomeFunction + '() { executarTransferencia("' + agendamentoId + '"); }');
 }
 
 /**
