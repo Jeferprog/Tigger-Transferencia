@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Agendamento de Transferência de Arquivos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f5f5 0%, #e8eef7 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #003d7a 0%, #0052a3 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 8px 8px 0 0;
+            margin-bottom: 0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #0052a3;
+        }
+
+        .card h2 {
+            color: #003d7a;
+            font-size: 18px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e8eef7;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #333;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 6px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #0052a3;
+            box-shadow: 0 0 0 3px rgba(0, 82, 163, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        .help-text {
+            font-size: 12px;
+            color: #666;
+            margin-top: 4px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #003d7a 0%, #0052a3 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 52, 122, 0.3);
+        }
+
+        .btn-secondary {
+            background: #e8eef7;
+            color: #003d7a;
+        }
+
+        .btn-secondary:hover {
+            background: #d8dce8;
+        }
+
+        .btn-danger {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        table thead {
+            background: #f0f4f9;
+            border-bottom: 2px solid #0052a3;
+        }
+
+        table th {
+            padding: 12px;
+            text-align: left;
+            color: #003d7a;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        table td {
+            padding: 12px;
+            border-bottom: 1px solid #e8eef7;
+            color: #333;
+            font-size: 13px;
+        }
+
+        table tr:hover {
+            background: #f9fafb;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-ativo {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-inativo {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-small {
+            padding: 6px 10px;
+            font-size: 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-edit {
+            background: #0052a3;
+            color: white;
+        }
+
+        .btn-edit:hover {
+            background: #003d7a;
+        }
+
+        .btn-delete {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background: #c0392b;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            display: block;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            display: block;
+        }
+
+        .alert-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+            display: block;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e8eef7;
+        }
+
+        .tab-button {
+            padding: 12px 20px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            color: #666;
+            font-weight: 600;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            font-size: 13px;
+            letter-spacing: 0.5px;
+        }
+
+        .tab-button.active {
+            color: #0052a3;
+            border-bottom-color: #0052a3;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            max-width: 600px;
+            width: 90%;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e8eef7;
+        }
+
+        .modal-header h2 {
+            color: #003d7a;
+            font-size: 20px;
+        }
+
+        .modal-close {
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            color: #666;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-close:hover {
+            color: #003d7a;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .form-row.full {
+            grid-column: 1 / -1;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #0052a3;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .radio-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .radio-item input[type="radio"] {
+            width: auto;
+            cursor: pointer;
+        }
+
+        .radio-item label {
+            margin: 0;
+            cursor: pointer;
+            font-weight: normal;
+        }
+
+        .suboptions {
+            margin-left: 20px;
+            margin-top: 10px;
+            padding: 15px;
+            background: #f9fafb;
+            border-radius: 4px;
+            border-left: 3px solid #0052a3;
+            display: none;
+        }
+
+        .suboptions.show {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 22px;
+            }
+
+            .tabs {
+                flex-wrap: wrap;
+            }
+
+            .tab-button {
+                padding: 10px 15px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔄 Sistema de Transferência de Arquivos</h1>
+            <p>Agende e gerencie transferências automáticas de arquivos</p>
+        </div>
+
+        <div class="card full-width" style="border-radius: 0 0 8px 8px; margin-bottom: 0;">
+            <div id="alert" class="alert"></div>
+
+            <div class="tabs">
+                <button class="tab-button active" onclick="switchTab('criar')">➕ Novo Agendamento</button>
+                <button class="tab-button" onclick="switchTab('listar')">📋 Meus Agendamentos</button>
+                <button class="tab-button" onclick="switchTab('historico')">📊 Histórico</button>
+            </div>
+
+            <!-- Tab: Criar Agendamento -->
+            <div id="criar" class="tab-content active">
+                <div class="main-content">
+                    <div class="card">
+                        <h2>📁 Configuração de Origem e Destino</h2>
+
+                        <div class="form-group">
+                            <label for="nomeAgendamento">Nome do Agendamento *</label>
+                            <input type="text" id="nomeAgendamento" placeholder="Ex: Transferência Diária de Relatórios">
+                            <span class="help-text">Identificador único para este agendamento</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="pastaOrigem">Pasta de Origem (ID da Pasta) *</label>
+                            <input type="text" id="pastaOrigem" placeholder="Ex: 1a2b3c4d5e6f7g8h">
+                            <span class="help-text">ID da pasta no Google Drive de onde os arquivos serão coletados</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="pastaDestino">Pasta de Destino (ID da Pasta) *</label>
+                            <input type="text" id="pastaDestino" placeholder="Ex: 9i8j7k6l5m4n3o2p">
+                            <span class="help-text">ID da pasta no Google Drive para onde os arquivos serão movidos</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="descricao">Descrição</label>
+                            <textarea id="descricao" placeholder="Descreva o propósito desta transferência..."></textarea>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h2>⏰ Configuração de Horário</h2>
+
+                        <div class="form-group">
+                            <label for="horarioExecucao">Horário de Execução *</label>
+                            <input type="time" id="horarioExecucao" value="08:00">
+                            <span class="help-text">Horário em que a transferência será realizada</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="diasSemana">Dias da Semana *</label>
+                            <div style="margin-top: 10px;">
+                                <label style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; cursor: pointer;">
+                                    <input type="checkbox" id="segunda" checked>
+                                    <span>Segunda-feira</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; cursor: pointer;">
+                                    <input type="checkbox" id="terca" checked>
+                                    <span>Terça-feira</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; cursor: pointer;">
+                                    <input type="checkbox" id="quarta" checked>
+                                    <span>Quarta-feira</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; cursor: pointer;">
+                                    <input type="checkbox" id="quinta" checked>
+                                    <span>Quinta-feira</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; cursor: pointer;">
+                                    <input type="checkbox" id="sexta" checked>
+                                    <span>Sexta-feira</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; cursor: pointer;">
+                                    <input type="checkbox" id="sabado">
+                                    <span>Sábado</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                    <input type="checkbox" id="domingo">
+                                    <span>Domingo</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Status *</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" id="ativo" name="status" value="ativo" checked>
+                                    <label for="ativo">Ativo</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="inativo" name="status" value="inativo">
+                                    <label for="inativo">Inativo</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card full-width">
+                    <h2>🎯 Seleção de Arquivos</h2>
+
+                    <div class="form-group">
+                        <label>Tipo de Arquivo *</label>
+                        <div class="radio-group">
+                            <div class="radio-item">
+                                <input type="radio" id="tipoUltimos" name="tipoArquivo" value="ultimos" checked onchange="updateSuboptions()">
+                                <label for="tipoUltimos">Últimos arquivos salvos</label>
+                            </div>
+                            <div class="radio-item">
+                                <input type="radio" id="tipoEspecifico" name="tipoArquivo" value="especifico" onchange="updateSuboptions()">
+                                <label for="tipoEspecifico">Nome específico</label>
+                            </div>
+                            <div class="radio-item">
+                                <input type="radio" id="tipoPatrao" name="tipoArquivo" value="padrao" onchange="updateSuboptions()">
+                                <label for="tipoPatrao">Padrão de nome</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="suboptions-ultimos" class="suboptions show">
+                        <div class="form-group">
+                            <label for="quantidadeUltimos">Quantidade de Arquivos *</label>
+                            <input type="number" id="quantidadeUltimos" min="1" value="5">
+                            <span class="help-text">Número dos últimos arquivos a transferir</span>
+                        </div>
+                    </div>
+
+                    <div id="suboptions-especifico" class="suboptions">
+                        <div class="form-group">
+                            <label for="nomeEspecifico">Nome Exato do Arquivo *</label>
+                            <input type="text" id="nomeEspecifico" placeholder="Ex: relatorio_final.pdf">
+                            <span class="help-text">Nome completo do arquivo a transferir</span>
+                        </div>
+                    </div>
+
+                    <div id="suboptions-padrao" class="suboptions">
+                        <div class="form-group">
+                            <label for="prefixoPadrao">Prefixo do Nome *</label>
+                            <input type="text" id="prefixoPadrao" placeholder="Ex: relatorio_">
+                            <span class="help-text">Início do nome do arquivo (resto será aleatório)</span>
+                        </div>
+                        <div class="form-group">
+                            <label for="sufixoPadrao">Sufixo (Extensão) *</label>
+                            <input type="text" id="sufixoPadrao" placeholder="Ex: .pdf" value=".pdf">
+                            <span class="help-text">Extensão do arquivo</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="button-group" style="margin-top: 20px;">
+                    <button class="btn btn-primary" onclick="salvarAgendamento()">💾 Salvar Agendamento</button>
+                    <button class="btn btn-secondary" onclick="limparFormulario()">🔄 Limpar</button>
+                </div>
+            </div>
+
+            <!-- Tab: Listar Agendamentos -->
+            <div id="listar" class="tab-content">
+                <h2 style="color: #003d7a; margin-bottom: 20px;">Meus Agendamentos</h2>
+                <div id="loading" class="loading">
+                    <div class="spinner"></div>
+                    <p>Carregando agendamentos...</p>
+                </div>
+                <div id="agendamentosList"></div>
+            </div>
+
+            <!-- Tab: Histórico -->
+            <div id="historico" class="tab-content">
+                <h2 style="color: #003d7a; margin-bottom: 20px;">Histórico de Execuções</h2>
+                <div id="loading-historico" class="loading">
+                    <div class="spinner"></div>
+                    <p>Carregando histórico...</p>
+                </div>
+                <div id="historicoList"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Edição -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="modal-close" onclick="fecharModal()">&times;</button>
+                <h2>Editar Agendamento</h2>
+            </div>
+            <div id="modalContent"></div>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+            event.target.classList.add('active');
+            document.getElementById(tab).classList.add('active');
+
+            if (tab === 'listar') {
+                carregarAgendamentos();
+            } else if (tab === 'historico') {
+                carregarHistorico();
+            }
+        }
+
+        function updateSuboptions() {
+            const tipo = document.querySelector('input[name="tipoArquivo"]:checked').value;
+
+            document.querySelectorAll('.suboptions').forEach(opt => opt.classList.remove('show'));
+            document.getElementById('suboptions-' + tipo).classList.add('show');
+        }
+
+        function salvarAgendamento() {
+            const dados = {
+                nome: document.getElementById('nomeAgendamento').value,
+                pastaOrigem: document.getElementById('pastaOrigem').value,
+                pastaDestino: document.getElementById('pastaDestino').value,
+                descricao: document.getElementById('descricao').value,
+                horario: document.getElementById('horarioExecucao').value,
+                diasSemana: {
+                    segunda: document.getElementById('segunda').checked,
+                    terca: document.getElementById('terca').checked,
+                    quarta: document.getElementById('quarta').checked,
+                    quinta: document.getElementById('quinta').checked,
+                    sexta: document.getElementById('sexta').checked,
+                    sabado: document.getElementById('sabado').checked,
+                    domingo: document.getElementById('domingo').checked
+                },
+                status: document.querySelector('input[name="status"]:checked').value,
+                tipoArquivo: document.querySelector('input[name="tipoArquivo"]:checked').value
+            };
+
+            if (dados.tipoArquivo === 'ultimos') {
+                dados.quantidadeUltimos = parseInt(document.getElementById('quantidadeUltimos').value);
+            } else if (dados.tipoArquivo === 'especifico') {
+                dados.nomeEspecifico = document.getElementById('nomeEspecifico').value;
+            } else if (dados.tipoArquivo === 'padrao') {
+                dados.prefixoPadrao = document.getElementById('prefixoPadrao').value;
+                dados.sufixoPadrao = document.getElementById('sufixoPadrao').value;
+            }
+
+            if (!validarDados(dados)) {
+                return;
+            }
+
+            google.script.run.withSuccessHandler(function() {
+                mostrarAlerta('Agendamento salvo com sucesso!', 'success');
+                limparFormulario();
+            }).withFailureHandler(function(erro) {
+                mostrarAlerta('Erro ao salvar: ' + erro, 'error');
+            }).salvarAgendamento(dados);
+        }
+
+        function validarDados(dados) {
+            if (!dados.nome || !dados.pastaOrigem || !dados.pastaDestino) {
+                mostrarAlerta('Por favor, preencha todos os campos obrigatórios (*)!', 'error');
+                return false;
+            }
+
+            const temDia = Object.values(dados.diasSemana).some(v => v);
+            if (!temDia) {
+                mostrarAlerta('Selecione pelo menos um dia da semana!', 'error');
+                return false;
+            }
+
+            return true;
+        }
+
+        function limparFormulario() {
+            document.getElementById('nomeAgendamento').value = '';
+            document.getElementById('pastaOrigem').value = '';
+            document.getElementById('pastaDestino').value = '';
+            document.getElementById('descricao').value = '';
+            document.getElementById('horarioExecucao').value = '08:00';
+            document.getElementById('quantidadeUltimos').value = '5';
+            document.getElementById('nomeEspecifico').value = '';
+            document.getElementById('prefixoPadrao').value = '';
+            document.getElementById('sufixoPadrao').value = '.pdf';
+            document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+                cb.checked = ['segunda', 'terca', 'quarta', 'quinta', 'sexta'].includes(cb.id);
+            });
+            document.getElementById('ativo').checked = true;
+            document.getElementById('tipoUltimos').checked = true;
+            updateSuboptions();
+        }
+
+        function carregarAgendamentos() {
+            document.getElementById('loading').style.display = 'block';
+            google.script.run.withSuccessHandler(function(agendamentos) {
+                document.getElementById('loading').style.display = 'none';
+                mostrarAgendamentos(agendamentos);
+            }).withFailureHandler(function(erro) {
+                document.getElementById('loading').style.display = 'none';
+                mostrarAlerta('Erro ao carregar: ' + erro, 'error');
+            }).carregarAgendamentos();
+        }
+
+        function mostrarAgendamentos(agendamentos) {
+            const container = document.getElementById('agendamentosList');
+
+            if (!agendamentos || agendamentos.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📭</div>
+                        <p>Nenhum agendamento criado ainda</p>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = `
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Horário</th>
+                                <th>Dias</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+
+            agendamentos.forEach(agendamento => {
+                const diasTexto = agendamento.diasSemana ? getDiasTexto(agendamento.diasSemana) : '-';
+                const statusClass = agendamento.status === 'ativo' ? 'status-ativo' : 'status-inativo';
+                const statusTexto = agendamento.status === 'ativo' ? 'ATIVO' : 'INATIVO';
+
+                html += `
+                    <tr>
+                        <td><strong>${agendamento.nome}</strong></td>
+                        <td>${agendamento.horario}</td>
+                        <td>${diasTexto}</td>
+                        <td><span class="status-badge ${statusClass}">${statusTexto}</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-small btn-edit" onclick="editarAgendamento('${agendamento.id}')">Editar</button>
+                                <button class="btn-small btn-delete" onclick="deletarAgendamento('${agendamento.id}')">Deletar</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            html += `
+                        </tbody>
+                    </table>
+                </div>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        function getDiasTexto(dias) {
+            const diasNomes = {
+                segunda: 'Seg',
+                terca: 'Ter',
+                quarta: 'Qua',
+                quinta: 'Qui',
+                sexta: 'Sex',
+                sabado: 'Sab',
+                domingo: 'Dom'
+            };
+
+            return Object.entries(dias)
+                .filter(([_, ativo]) => ativo)
+                .map(([dia]) => diasNomes[dia])
+                .join(', ');
+        }
+
+        function editarAgendamento(id) {
+            google.script.run.withSuccessHandler(function(agendamento) {
+                mostrarModalEdicao(agendamento);
+            }).obterAgendamento(id);
+        }
+
+        function mostrarModalEdicao(agendamento) {
+            const diasSemana = agendamento.diasSemana || {};
+            let html = `
+                <div class="form-group">
+                    <label for="edit-nome">Nome *</label>
+                    <input type="text" id="edit-nome" value="${agendamento.nome}">
+                </div>
+
+                <div class="form-group">
+                    <label for="edit-pastaOrigem">Pasta Origem *</label>
+                    <input type="text" id="edit-pastaOrigem" value="${agendamento.pastaOrigem}">
+                </div>
+
+                <div class="form-group">
+                    <label for="edit-pastaDestino">Pasta Destino *</label>
+                    <input type="text" id="edit-pastaDestino" value="${agendamento.pastaDestino}">
+                </div>
+
+                <div class="form-group">
+                    <label for="edit-horario">Horário *</label>
+                    <input type="time" id="edit-horario" value="${agendamento.horario}">
+                </div>
+
+                <div class="form-group">
+                    <label>Status *</label>
+                    <div class="radio-group">
+                        <div class="radio-item">
+                            <input type="radio" id="edit-ativo" name="edit-status" value="ativo" ${agendamento.status === 'ativo' ? 'checked' : ''}>
+                            <label for="edit-ativo">Ativo</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="edit-inativo" name="edit-status" value="inativo" ${agendamento.status === 'inativo' ? 'checked' : ''}>
+                            <label for="edit-inativo">Inativo</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="button-group" style="margin-top: 25px;">
+                    <button class="btn btn-primary" onclick="salvarEdicao('${agendamento.id}')">Salvar Alterações</button>
+                    <button class="btn btn-secondary" onclick="fecharModal()">Cancelar</button>
+                </div>
+            `;
+
+            document.getElementById('modalContent').innerHTML = html;
+            document.getElementById('editModal').classList.add('show');
+        }
+
+        function salvarEdicao(id) {
+            const dados = {
+                id: id,
+                nome: document.getElementById('edit-nome').value,
+                pastaOrigem: document.getElementById('edit-pastaOrigem').value,
+                pastaDestino: document.getElementById('edit-pastaDestino').value,
+                horario: document.getElementById('edit-horario').value,
+                status: document.querySelector('input[name="edit-status"]:checked').value
+            };
+
+            google.script.run.withSuccessHandler(function() {
+                mostrarAlerta('Alterações salvas com sucesso!', 'success');
+                fecharModal();
+                carregarAgendamentos();
+            }).withFailureHandler(function(erro) {
+                mostrarAlerta('Erro ao salvar: ' + erro, 'error');
+            }).atualizarAgendamento(dados);
+        }
+
+        function fecharModal() {
+            document.getElementById('editModal').classList.remove('show');
+        }
+
+        function deletarAgendamento(id) {
+            if (confirm('Tem certeza que deseja deletar este agendamento?')) {
+                google.script.run.withSuccessHandler(function() {
+                    mostrarAlerta('Agendamento deletado com sucesso!', 'success');
+                    carregarAgendamentos();
+                }).withFailureHandler(function(erro) {
+                    mostrarAlerta('Erro ao deletar: ' + erro, 'error');
+                }).deletarAgendamento(id);
+            }
+        }
+
+        function carregarHistorico() {
+            document.getElementById('loading-historico').style.display = 'block';
+            google.script.run.withSuccessHandler(function(historico) {
+                document.getElementById('loading-historico').style.display = 'none';
+                mostrarHistorico(historico);
+            }).withFailureHandler(function(erro) {
+                document.getElementById('loading-historico').style.display = 'none';
+                mostrarAlerta('Erro ao carregar: ' + erro, 'error');
+            }).carregarHistorico();
+        }
+
+        function mostrarHistorico(historico) {
+            const container = document.getElementById('historicoList');
+
+            if (!historico || historico.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📊</div>
+                        <p>Nenhum histórico de execução disponível</p>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = `
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Agendamento</th>
+                                <th>Data/Hora Execução</th>
+                                <th>Arquivos Transferidos</th>
+                                <th>Status</th>
+                                <th>Mensagem</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+
+            historico.forEach(registro => {
+                const statusClass = registro.status === 'sucesso' ? 'status-ativo' : 'status-inativo';
+                const statusTexto = registro.status === 'sucesso' ? 'SUCESSO' : 'ERRO';
+
+                html += `
+                    <tr>
+                        <td><strong>${registro.agendamento}</strong></td>
+                        <td>${registro.dataExecucao}</td>
+                        <td>${registro.arquivosTransferidos}</td>
+                        <td><span class="status-badge ${statusClass}">${statusTexto}</span></td>
+                        <td>${registro.mensagem || '-'}</td>
+                    </tr>
+                `;
+            });
+
+            html += `
+                        </tbody>
+                    </table>
+                </div>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        function mostrarAlerta(mensagem, tipo) {
+            const alert = document.getElementById('alert');
+            alert.textContent = mensagem;
+            alert.className = 'alert alert-' + tipo;
+
+            setTimeout(function() {
+                alert.className = 'alert';
+            }, 5000);
+        }
+
+        window.onload = function() {
+            limparFormulario();
+        };
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('editModal');
+            if (event.target === modal) {
+                fecharModal();
+            }
+        };
+    </script>
+</body>
+</html>
