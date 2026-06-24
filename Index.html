@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema de Agendamento de Transferência de Arquivos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -12,8 +13,8 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #f5f5f5 0%, #e8eef7 100%);
+            font-family: 'Roboto', Arial, sans-serif;
+            background: #f5f5f5;
             min-height: 100vh;
             padding: 20px;
         }
@@ -24,7 +25,7 @@
         }
 
         .header {
-            background: linear-gradient(135deg, #003d7a 0%, #0052a3 100%);
+            background: #005c46;
             color: white;
             padding: 30px;
             border-radius: 8px 8px 0 0;
@@ -36,11 +37,13 @@
             font-size: 28px;
             margin-bottom: 8px;
             font-weight: 600;
+            color: white;
         }
 
         .header p {
             font-size: 14px;
-            opacity: 0.9;
+            opacity: 0.95;
+            color: rgba(255, 255, 255, 0.9);
         }
 
         .main-content {
@@ -55,15 +58,15 @@
             border-radius: 8px;
             padding: 25px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            border-left: 4px solid #0052a3;
+            border-left: 4px solid #f58220;
         }
 
         .card h2 {
-            color: #003d7a;
+            color: #005c46;
             font-size: 18px;
             margin-bottom: 20px;
             padding-bottom: 10px;
-            border-bottom: 2px solid #e8eef7;
+            border-bottom: 2px solid #f0f0f0;
         }
 
         .form-group {
@@ -94,8 +97,8 @@
         .form-group select:focus,
         .form-group textarea:focus {
             outline: none;
-            border-color: #0052a3;
-            box-shadow: 0 0 0 3px rgba(0, 82, 163, 0.1);
+            border-color: #f58220;
+            box-shadow: 0 0 0 3px rgba(245, 130, 32, 0.1);
         }
 
         .form-group textarea {
@@ -129,22 +132,23 @@
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #003d7a 0%, #0052a3 100%);
+            background: #f58220;
             color: white;
         }
 
         .btn-primary:hover {
+            background: #e67a1f;
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 52, 122, 0.3);
+            box-shadow: 0 4px 12px rgba(245, 130, 32, 0.3);
         }
 
         .btn-secondary {
-            background: #e8eef7;
-            color: #003d7a;
+            background: #e8e8e8;
+            color: #005c46;
         }
 
         .btn-secondary:hover {
-            background: #d8dce8;
+            background: #d5d5d5;
         }
 
         .btn-danger {
@@ -171,14 +175,14 @@
         }
 
         table thead {
-            background: #f0f4f9;
-            border-bottom: 2px solid #0052a3;
+            background: #005c46;
+            border-bottom: 2px solid #005c46;
         }
 
         table th {
             padding: 12px;
             text-align: left;
-            color: #003d7a;
+            color: white;
             font-weight: 600;
             font-size: 13px;
         }
@@ -228,12 +232,12 @@
         }
 
         .btn-edit {
-            background: #0052a3;
+            background: #f58220;
             color: white;
         }
 
         .btn-edit:hover {
-            background: #003d7a;
+            background: #e67a1f;
         }
 
         .btn-delete {
@@ -277,7 +281,8 @@
             display: flex;
             gap: 0;
             margin-bottom: 20px;
-            border-bottom: 2px solid #e8eef7;
+            border-bottom: 2px solid #e0e0e0;
+            background: #f9f9f9;
         }
 
         .tab-button {
@@ -295,8 +300,8 @@
         }
 
         .tab-button.active {
-            color: #0052a3;
-            border-bottom-color: #0052a3;
+            color: #f58220;
+            border-bottom-color: #f58220;
         }
 
         .tab-content {
@@ -342,7 +347,7 @@
         }
 
         .modal-header h2 {
-            color: #003d7a;
+            color: #005c46;
             font-size: 20px;
         }
 
@@ -438,7 +443,7 @@
             padding: 15px;
             background: #f9fafb;
             border-radius: 4px;
-            border-left: 3px solid #0052a3;
+            border-left: 3px solid #f58220;
             display: none;
         }
 
